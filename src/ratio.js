@@ -7,6 +7,11 @@ var daggy = require('daggy'),
 
     Ratio = daggy.tagged('n', 'd');
 
+function gcd(a, b) {
+    if (b <= 0) return a;
+    return gcd(b, a % b);
+}
+
 // Methods
 Ratio.of = function(x) {
     return Ratio(x, 1);
@@ -36,6 +41,11 @@ Ratio.prototype.map = function(f) {
     return this.chain(function(x) {
         return Ratio(f(x), ratio.d);
     });
+};
+
+Ratio.prototype.simplify = function() {
+    var factor = gcd(this.n * 10, this.d * 10) / 10;
+    return Ratio(this.n / factor, this.d / factor);
 };
 
 // Export

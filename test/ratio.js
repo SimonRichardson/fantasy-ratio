@@ -42,4 +42,8 @@ exports.list = {
     'associativity (Monoid)': monoid.associativity(λ)(Ratio, run),
 
     // Manual tests
+    'when testing simplify should return correct value': function(test) {
+        test.equal(show(Ratio.of(0.2).simplify()), '1/5');
+        test.done();
+    }
 };
