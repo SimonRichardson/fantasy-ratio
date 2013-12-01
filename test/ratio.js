@@ -11,6 +11,10 @@ function show(a) {
     return a.n + '/' + a.d;
 }
 
+function equals(a, b) {
+    return a.n === b.n && a.d === b.d;
+}
+
 function run(a) {
     return Identity.of(show(a));
 }
@@ -42,8 +46,52 @@ exports.list = {
     'associativity (Monoid)': monoid.associativity(λ)(Ratio, run),
 
     // Manual tests
+    'when testing add should return correct value': function(test) {
+        var x = Ratio.of(0.6).add(Ratio.of(0.2));
+        test.ok(equals(x, Ratio.of(0.8)));
+        test.done();
+    },
+    'when testing add with simplify should return correct value': function(test) {
+        var x = Ratio(0.6, 0.8).add(Ratio.of(0.2));
+        test.ok(equals(x.simplify(), Ratio(4278419646001971, 4503599627370496)));
+        test.done();
+    },
+    'when testing subtract should return correct value': function(test) {
+        var x = Ratio.of(0.5).subtract(Ratio.of(0.2));
+        test.ok(equals(x, Ratio.of(0.3)));
+        test.done();
+    },
+    'when testing subtract with simplify should return correct value': function(test) {
+        var x = Ratio(0.6, 0.8).subtract(Ratio.of(0.2));
+        test.ok(equals(x.simplify(), Ratio(4953959590107545, 9007199254740992)));
+        test.done();
+    },
+    'when testing mod should return correct value': λ.check(
+        function(a, b) {
+            return equals(Ratio(a, b).mod(), Ratio.of(a % b));
+        },
+        [Number, Number]
+    ),
+    'when testing negate should return correct value': λ.check(
+        function(a, b) {
+            return equals(Ratio(a, b).negate(), Ratio(-a, b));
+        },
+        [Number, Number]
+    ),
+    'when testing scale should return correct value': λ.check(
+        function(a, b) {
+            return equals(Ratio(a, b).scale(2), Ratio(a * 2, b * 2));
+        },
+        [Number, Number]
+    ),
     'when testing simplify should return correct value': function(test) {
         test.equal(show(Ratio.of(0.2).simplify()), '1/5');
         test.done();
-    }
+    },
+    'when testing swap should return correct value': λ.check(
+        function(a, b) {
+            return equals(Ratio(a, b).swap(), Ratio(b, a));
+        },
+        [Number, Number]
+    )
 };

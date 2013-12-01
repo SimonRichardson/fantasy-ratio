@@ -43,9 +43,42 @@ Ratio.prototype.map = function(f) {
     });
 };
 
+// Common
+Ratio.prototype.add = function(x) {
+    return this.d === x.d ?
+        Ratio(this.n + x.n, this.d) :
+        (y = gcd(this.d, x.d),
+            Ratio(
+                ((this.n * x.d) + (this.d * x.n)) / y,
+                (this.d * x.d) / y
+            )
+        );
+};
+Ratio.prototype.subtract = function(x) {
+    return this.d === x.d ?
+        Ratio(this.n - x.n, this.d) :
+        (y = gcd(this.d, x.d),
+            Ratio(
+                ((this.n * x.d) - (this.d * x.n)) / y,
+                (this.d * x.d) / y
+            )
+        );
+};
+Ratio.prototype.mod = function() {
+    return Ratio.of(this.n % this.d);
+};
+Ratio.prototype.negate = function() {
+    return Ratio(-this.n, this.d);
+};
+Ratio.prototype.scale = function(x) {
+    return Ratio(this.n * x, this.d * x);
+};
 Ratio.prototype.simplify = function() {
     var factor = gcd(this.n * 10, this.d * 10) / 10;
     return Ratio(this.n / factor, this.d / factor);
+};
+Ratio.prototype.swap = function() {
+    return Ratio(this.d, this.n);
 };
 
 // Export
